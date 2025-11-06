@@ -1,5 +1,6 @@
 package com.example.UserService.Service;
 
+import com.example.UserService.Exception.ResourceNotFoundException;
 import com.example.UserService.Model.ProductDTO;
 import com.example.UserService.Model.User;
 import com.example.UserService.Repository.UserRepository;
@@ -22,14 +23,14 @@ public class UserService {
     public User createUser(User user) {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if(existingUser.isPresent()) {
-            throw new RuntimeException("Email already exists.");
+            throw new ResourceNotFoundException("Email already exists.");
         }
         return userRepository.save(user);
     }
 
     public User updateUser(Long id, User updatedUser) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("user not found."));
 
         if(updatedUser.getName() != null) user.setName(updatedUser.getName());
         if(updatedUser.getEmail() != null) user.setEmail(updatedUser.getEmail());
@@ -42,7 +43,7 @@ public class UserService {
     }
 
     public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @CircuitBreaker(name = "productService", fallbackMethod = "fallbackGetProduct")

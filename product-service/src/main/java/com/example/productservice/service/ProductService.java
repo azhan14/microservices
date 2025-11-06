@@ -1,6 +1,7 @@
 package com.example.productservice.service;
 
 import com.example.productservice.entity.Product;
+import com.example.productservice.exception.ResourceNotFoundException;
 import com.example.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() ->  new RuntimeException("Product not found"));
+        return productRepository.findById(id).orElseThrow(() ->  new ResourceNotFoundException("Product not found"));
     }
 
     public Product updateProduct(Long id, Product productDetails) {
